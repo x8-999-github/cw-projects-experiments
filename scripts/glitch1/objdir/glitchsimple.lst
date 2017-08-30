@@ -1,0 +1,804 @@
+   1               		.file	"glitchsimple.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__CCP__ = 0x34
+   7               	__tmp_reg__ = 0
+   8               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  11               		.cfi_sections	.debug_frame
+  12               	.global	uart_puts
+  14               	uart_puts:
+  15               	.LFB12:
+  16               		.file 1 "glitchsimple.c"
+   1:glitchsimple.c **** /*
+   2:glitchsimple.c ****     This file is part of the ChipWhisperer Example Targets
+   3:glitchsimple.c ****     Copyright (C) 2012-2015 NewAE Technology Inc.
+   4:glitchsimple.c **** 
+   5:glitchsimple.c ****     This program is free software: you can redistribute it and/or modify
+   6:glitchsimple.c ****     it under the terms of the GNU General Public License as published by
+   7:glitchsimple.c ****     the Free Software Foundation, either version 3 of the License, or
+   8:glitchsimple.c ****     (at your option) any later version.
+   9:glitchsimple.c **** 
+  10:glitchsimple.c ****     This program is distributed in the hope that it will be useful,
+  11:glitchsimple.c ****     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:glitchsimple.c ****     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  13:glitchsimple.c ****     GNU General Public License for more details.
+  14:glitchsimple.c **** 
+  15:glitchsimple.c ****     You should have received a copy of the GNU General Public License
+  16:glitchsimple.c ****     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  17:glitchsimple.c **** */
+  18:glitchsimple.c **** 
+  19:glitchsimple.c **** #include <stdio.h>
+  20:glitchsimple.c **** #include "hal.h"
+  21:glitchsimple.c **** 
+  22:glitchsimple.c **** 
+  23:glitchsimple.c **** void uart_puts(char * s){
+  17               		.loc 1 23 0
+  18               		.cfi_startproc
+  19               	.LVL0:
+  20 0000 CF93      		push r28
+  21               	.LCFI0:
+  22               		.cfi_def_cfa_offset 4
+  23               		.cfi_offset 28, -3
+  24 0002 DF93      		push r29
+  25               	.LCFI1:
+  26               		.cfi_def_cfa_offset 5
+  27               		.cfi_offset 29, -4
+  28               	/* prologue: function */
+  29               	/* frame size = 0 */
+  30               	/* stack size = 2 */
+  31               	.L__stack_usage = 2
+  32 0004 EC01      		movw r28,r24
+  33               	.LVL1:
+  34               	.L2:
+  24:glitchsimple.c ****     while(*s){
+  35               		.loc 1 24 0
+  36 0006 8991      		ld r24,Y+
+  37               	.LVL2:
+  38 0008 8823      		tst r24
+  39 000a 01F0      		breq .L5
+  40               	.LVL3:
+  25:glitchsimple.c ****         putch(*(s++));
+  41               		.loc 1 25 0
+  42 000c 0E94 0000 		call output_ch_0
+  43               	.LVL4:
+  44 0010 00C0      		rjmp .L2
+  45               	.LVL5:
+  46               	.L5:
+  47               	/* epilogue start */
+  26:glitchsimple.c ****     }
+  27:glitchsimple.c **** }
+  48               		.loc 1 27 0
+  49 0012 DF91      		pop r29
+  50 0014 CF91      		pop r28
+  51               	.LVL6:
+  52 0016 0895      		ret
+  53               		.cfi_endproc
+  54               	.LFE12:
+  56               		.section	.rodata.str1.1,"aMS",@progbits,1
+  57               	.LC0:
+  58 0000 256C 7520 		.string	"%lu %d %d %d\n"
+  58      2564 2025 
+  58      6420 2564 
+  58      0A00 
+  59               		.text
+  60               	.global	glitch_infinite
+  62               	glitch_infinite:
+  63               	.LFB13:
+  28:glitchsimple.c **** 
+  29:glitchsimple.c **** void glitch_infinite(void)
+  30:glitchsimple.c **** {
+  64               		.loc 1 30 0
+  65               		.cfi_startproc
+  66 0018 CF93      		push r28
+  67               	.LCFI2:
+  68               		.cfi_def_cfa_offset 4
+  69               		.cfi_offset 28, -3
+  70 001a DF93      		push r29
+  71               	.LCFI3:
+  72               		.cfi_def_cfa_offset 5
+  73               		.cfi_offset 29, -4
+  74 001c CDB7      		in r28,__SP_L__
+  75 001e DEB7      		in r29,__SP_H__
+  76               	.LCFI4:
+  77               		.cfi_def_cfa_register 28
+  78 0020 C854      		subi r28,72
+  79 0022 D109      		sbc r29,__zero_reg__
+  80               	.LCFI5:
+  81               		.cfi_def_cfa_offset 77
+  82 0024 CDBF      		out __SP_L__,r28
+  83 0026 DEBF      		out __SP_H__,r29
+  84               	/* prologue: function */
+  85               	/* frame size = 72 */
+  86               	/* stack size = 74 */
+  87               	.L__stack_usage = 74
+  88               	.LVL7:
+  31:glitchsimple.c ****     char str[64];
+  32:glitchsimple.c ****     unsigned int k = 0;
+  89               		.loc 1 32 0
+  90 0028 20E0      		ldi r18,0
+  91 002a 30E0      		ldi r19,0
+  33:glitchsimple.c ****     //Declared volatile to avoid optimizing away loop.
+  34:glitchsimple.c ****     //This also adds lots of SRAM access
+  35:glitchsimple.c ****     volatile uint16_t i, j;
+  36:glitchsimple.c ****     volatile uint32_t cnt;
+  37:glitchsimple.c ****     while(1){
+  38:glitchsimple.c ****         cnt = 0;
+  39:glitchsimple.c ****         trigger_high();
+  92               		.loc 1 39 0
+  93 002c BB24      		clr r11
+  94 002e B394      		inc r11
+  40:glitchsimple.c ****         trigger_low();
+  41:glitchsimple.c ****         for(i=0; i<200; i++){
+  42:glitchsimple.c ****             for(j=0; j<200; j++){
+  43:glitchsimple.c ****                 cnt++;
+  44:glitchsimple.c ****             }
+  45:glitchsimple.c ****         }
+  46:glitchsimple.c ****         sprintf(str, "%lu %d %d %d\n", cnt, i, j, k++);
+  95               		.loc 1 46 0
+  96 0030 80E0      		ldi r24,lo8(.LC0)
+  97 0032 E82E      		mov r14,r24
+  98 0034 80E0      		ldi r24,hi8(.LC0)
+  99 0036 F82E      		mov r15,r24
+ 100 0038 8E01      		movw r16,r28
+ 101 003a 0F5F      		subi r16,-1
+ 102 003c 1F4F      		sbci r17,-1
+ 103               	.LVL8:
+ 104               	.L11:
+  38:glitchsimple.c ****         trigger_high();
+ 105               		.loc 1 38 0
+ 106 003e 2596      		adiw r28,65-60
+ 107 0040 1CAE      		std Y+60,__zero_reg__
+ 108 0042 1DAE      		std Y+61,__zero_reg__
+ 109 0044 1EAE      		std Y+62,__zero_reg__
+ 110 0046 1FAE      		std Y+63,__zero_reg__
+ 111 0048 2597      		sbiw r28,65-60
+  39:glitchsimple.c ****         trigger_low();
+ 112               		.loc 1 39 0
+ 113 004a B092 0506 		sts 1541,r11
+  40:glitchsimple.c ****         trigger_low();
+ 114               		.loc 1 40 0
+ 115 004e B092 0606 		sts 1542,r11
+  41:glitchsimple.c ****             for(j=0; j<200; j++){
+ 116               		.loc 1 41 0
+ 117 0052 2996      		adiw r28,71-62
+ 118 0054 1EAE      		std Y+62,__zero_reg__
+ 119 0056 1FAE      		std Y+63,__zero_reg__
+ 120 0058 2997      		sbiw r28,71-62
+ 121               	.L7:
+  41:glitchsimple.c ****             for(j=0; j<200; j++){
+ 122               		.loc 1 41 0 is_stmt 0 discriminator 1
+ 123 005a 2996      		adiw r28,71-62
+ 124 005c 8EAD      		ldd r24,Y+62
+ 125 005e 9FAD      		ldd r25,Y+63
+ 126 0060 2997      		sbiw r28,71-62
+ 127 0062 883C      		cpi r24,-56
+ 128 0064 9105      		cpc r25,__zero_reg__
+ 129 0066 00F4      		brsh .L12
+  42:glitchsimple.c ****                 cnt++;
+ 130               		.loc 1 42 0 is_stmt 1
+ 131 0068 2796      		adiw r28,69-62
+ 132 006a 1EAE      		std Y+62,__zero_reg__
+ 133 006c 1FAE      		std Y+63,__zero_reg__
+ 134 006e 2797      		sbiw r28,69-62
+ 135               	.L8:
+  42:glitchsimple.c ****                 cnt++;
+ 136               		.loc 1 42 0 is_stmt 0 discriminator 1
+ 137 0070 2796      		adiw r28,69-62
+ 138 0072 8EAD      		ldd r24,Y+62
+ 139 0074 9FAD      		ldd r25,Y+63
+ 140 0076 2797      		sbiw r28,69-62
+ 141 0078 883C      		cpi r24,-56
+ 142 007a 9105      		cpc r25,__zero_reg__
+ 143 007c 00F4      		brsh .L13
+  43:glitchsimple.c ****             }
+ 144               		.loc 1 43 0 is_stmt 1 discriminator 3
+ 145 007e 2596      		adiw r28,65-60
+ 146 0080 8CAD      		ldd r24,Y+60
+ 147 0082 9DAD      		ldd r25,Y+61
+ 148 0084 AEAD      		ldd r26,Y+62
+ 149 0086 BFAD      		ldd r27,Y+63
+ 150 0088 2597      		sbiw r28,65-60
+ 151 008a 0196      		adiw r24,1
+ 152 008c A11D      		adc r26,__zero_reg__
+ 153 008e B11D      		adc r27,__zero_reg__
+ 154 0090 2596      		adiw r28,65-60
+ 155 0092 8CAF      		std Y+60,r24
+ 156 0094 9DAF      		std Y+61,r25
+ 157 0096 AEAF      		std Y+62,r26
+ 158 0098 BFAF      		std Y+63,r27
+ 159 009a 2597      		sbiw r28,65-60
+  42:glitchsimple.c ****                 cnt++;
+ 160               		.loc 1 42 0 discriminator 3
+ 161 009c 2796      		adiw r28,69-62
+ 162 009e 8EAD      		ldd r24,Y+62
+ 163 00a0 9FAD      		ldd r25,Y+63
+ 164 00a2 2797      		sbiw r28,69-62
+ 165 00a4 0196      		adiw r24,1
+ 166 00a6 2796      		adiw r28,69-62
+ 167 00a8 8EAF      		std Y+62,r24
+ 168 00aa 9FAF      		std Y+63,r25
+ 169 00ac 2797      		sbiw r28,69-62
+ 170 00ae 00C0      		rjmp .L8
+ 171               	.L13:
+  41:glitchsimple.c ****             for(j=0; j<200; j++){
+ 172               		.loc 1 41 0 discriminator 2
+ 173 00b0 2996      		adiw r28,71-62
+ 174 00b2 4EAD      		ldd r20,Y+62
+ 175 00b4 5FAD      		ldd r21,Y+63
+ 176 00b6 2997      		sbiw r28,71-62
+ 177 00b8 4F5F      		subi r20,-1
+ 178 00ba 5F4F      		sbci r21,-1
+ 179 00bc 2996      		adiw r28,71-62
+ 180 00be 4EAF      		std Y+62,r20
+ 181 00c0 5FAF      		std Y+63,r21
+ 182 00c2 2997      		sbiw r28,71-62
+ 183 00c4 00C0      		rjmp .L7
+ 184               	.L12:
+ 185               		.loc 1 46 0
+ 186 00c6 6901      		movw r12,r18
+ 187 00c8 8FEF      		ldi r24,-1
+ 188 00ca C81A      		sub r12,r24
+ 189 00cc D80A      		sbc r13,r24
+ 190               	.LVL9:
+ 191 00ce 2796      		adiw r28,69-62
+ 192 00d0 EEAD      		ldd r30,Y+62
+ 193 00d2 FFAD      		ldd r31,Y+63
+ 194 00d4 2797      		sbiw r28,69-62
+ 195 00d6 2996      		adiw r28,71-62
+ 196 00d8 8EAD      		ldd r24,Y+62
+ 197 00da 9FAD      		ldd r25,Y+63
+ 198 00dc 2997      		sbiw r28,71-62
+ 199 00de 2596      		adiw r28,65-60
+ 200 00e0 4CAD      		ldd r20,Y+60
+ 201 00e2 5DAD      		ldd r21,Y+61
+ 202 00e4 6EAD      		ldd r22,Y+62
+ 203 00e6 7FAD      		ldd r23,Y+63
+ 204 00e8 2597      		sbiw r28,65-60
+ 205 00ea 3F93      		push r19
+ 206 00ec 2F93      		push r18
+ 207 00ee FF93      		push r31
+ 208 00f0 EF93      		push r30
+ 209 00f2 9F93      		push r25
+ 210 00f4 8F93      		push r24
+ 211 00f6 7F93      		push r23
+ 212 00f8 6F93      		push r22
+ 213 00fa 5F93      		push r21
+ 214 00fc 4F93      		push r20
+ 215 00fe FF92      		push r15
+ 216 0100 EF92      		push r14
+ 217 0102 1F93      		push r17
+ 218 0104 0F93      		push r16
+ 219 0106 0E94 0000 		call sprintf
+ 220               	.LVL10:
+  47:glitchsimple.c ****         uart_puts(str);
+ 221               		.loc 1 47 0
+ 222 010a C801      		movw r24,r16
+ 223 010c 0E94 0000 		call uart_puts
+ 224               	.LVL11:
+  48:glitchsimple.c ****     }
+ 225               		.loc 1 48 0
+ 226 0110 CDBF      		out __SP_L__,r28
+ 227 0112 DEBF      		out __SP_H__,r29
+  46:glitchsimple.c ****         uart_puts(str);
+ 228               		.loc 1 46 0
+ 229 0114 9601      		movw r18,r12
+ 230               		.loc 1 48 0
+ 231 0116 00C0      		rjmp .L11
+ 232               		.cfi_endproc
+ 233               	.LFE13:
+ 235               		.section	.rodata.str1.1
+ 236               	.LC1:
+ 237 000e 3132 3334 		.string	"1234"
+ 237      00
+ 238               		.text
+ 239               	.global	glitch1
+ 241               	glitch1:
+ 242               	.LFB14:
+  49:glitchsimple.c **** }
+  50:glitchsimple.c **** 
+  51:glitchsimple.c **** void glitch1(void)
+  52:glitchsimple.c **** {
+ 243               		.loc 1 52 0
+ 244               		.cfi_startproc
+ 245 0118 CF93      		push r28
+ 246               	.LCFI6:
+ 247               		.cfi_def_cfa_offset 4
+ 248               		.cfi_offset 28, -3
+ 249 011a DF93      		push r29
+ 250               	.LCFI7:
+ 251               		.cfi_def_cfa_offset 5
+ 252               		.cfi_offset 29, -4
+ 253 011c 1F92      		push __zero_reg__
+ 254               	.LCFI8:
+ 255               		.cfi_def_cfa_offset 6
+ 256 011e CDB7      		in r28,__SP_L__
+ 257 0120 DEB7      		in r29,__SP_H__
+ 258               	.LCFI9:
+ 259               		.cfi_def_cfa_register 28
+ 260               	/* prologue: function */
+ 261               	/* frame size = 1 */
+ 262               	/* stack size = 3 */
+ 263               	.L__stack_usage = 3
+  53:glitchsimple.c ****     led_ok(1);
+ 264               		.loc 1 53 0
+ 265 0122 80E2      		ldi r24,lo8(32)
+ 266 0124 8093 0606 		sts 1542,r24
+  54:glitchsimple.c ****     led_error(0);
+ 267               		.loc 1 54 0
+ 268 0128 80E4      		ldi r24,lo8(64)
+ 269 012a 8093 0506 		sts 1541,r24
+  55:glitchsimple.c ****     
+  56:glitchsimple.c ****     //Some fake variable
+  57:glitchsimple.c ****     volatile uint8_t a = 0;
+ 270               		.loc 1 57 0
+ 271 012e 1982      		std Y+1,__zero_reg__
+  58:glitchsimple.c ****     
+  59:glitchsimple.c ****     putch('A');
+ 272               		.loc 1 59 0
+ 273 0130 81E4      		ldi r24,lo8(65)
+ 274 0132 0E94 0000 		call output_ch_0
+ 275               	.LVL12:
+  60:glitchsimple.c ****     
+  61:glitchsimple.c ****     //External trigger logic
+  62:glitchsimple.c ****     trigger_high();
+ 276               		.loc 1 62 0
+ 277 0136 81E0      		ldi r24,lo8(1)
+ 278 0138 8093 0506 		sts 1541,r24
+  63:glitchsimple.c ****     trigger_low();
+ 279               		.loc 1 63 0
+ 280 013c 8093 0606 		sts 1542,r24
+ 281               	.L15:
+  64:glitchsimple.c ****     
+  65:glitchsimple.c ****     //Should be an infinite loop
+  66:glitchsimple.c ****     while(a != 2){
+ 282               		.loc 1 66 0 discriminator 1
+ 283 0140 8981      		ldd r24,Y+1
+ 284 0142 8230      		cpi r24,lo8(2)
+ 285 0144 01F4      		brne .L15
+  67:glitchsimple.c ****     ;
+  68:glitchsimple.c ****     }    
+  69:glitchsimple.c ****     
+  70:glitchsimple.c ****     led_error(1);
+ 286               		.loc 1 70 0 discriminator 1
+ 287 0146 10E4      		ldi r17,lo8(64)
+ 288 0148 1093 0606 		sts 1542,r17
+  71:glitchsimple.c ****     led_error(1);
+ 289               		.loc 1 71 0 discriminator 1
+ 290 014c 1093 0606 		sts 1542,r17
+  72:glitchsimple.c ****     led_error(1);
+ 291               		.loc 1 72 0 discriminator 1
+ 292 0150 1093 0606 		sts 1542,r17
+  73:glitchsimple.c ****     led_error(1);
+ 293               		.loc 1 73 0 discriminator 1
+ 294 0154 1093 0606 		sts 1542,r17
+  74:glitchsimple.c ****     led_error(1);
+ 295               		.loc 1 74 0 discriminator 1
+ 296 0158 1093 0606 		sts 1542,r17
+  75:glitchsimple.c ****     led_error(1);
+ 297               		.loc 1 75 0 discriminator 1
+ 298 015c 1093 0606 		sts 1542,r17
+  76:glitchsimple.c ****     led_error(1);
+ 299               		.loc 1 76 0 discriminator 1
+ 300 0160 1093 0606 		sts 1542,r17
+  77:glitchsimple.c ****     led_error(1);
+ 301               		.loc 1 77 0 discriminator 1
+ 302 0164 1093 0606 		sts 1542,r17
+  78:glitchsimple.c ****     led_error(1);
+ 303               		.loc 1 78 0 discriminator 1
+ 304 0168 1093 0606 		sts 1542,r17
+  79:glitchsimple.c ****     
+  80:glitchsimple.c ****     uart_puts("1234");
+ 305               		.loc 1 80 0 discriminator 1
+ 306 016c 80E0      		ldi r24,lo8(.LC1)
+ 307 016e 90E0      		ldi r25,hi8(.LC1)
+ 308 0170 0E94 0000 		call uart_puts
+ 309               	.LVL13:
+  81:glitchsimple.c ****     
+  82:glitchsimple.c ****     led_error(1);
+ 310               		.loc 1 82 0 discriminator 1
+ 311 0174 1093 0606 		sts 1542,r17
+  83:glitchsimple.c ****     led_error(1);
+ 312               		.loc 1 83 0 discriminator 1
+ 313 0178 1093 0606 		sts 1542,r17
+  84:glitchsimple.c ****     led_error(1);
+ 314               		.loc 1 84 0 discriminator 1
+ 315 017c 1093 0606 		sts 1542,r17
+  85:glitchsimple.c ****     led_error(1);
+ 316               		.loc 1 85 0 discriminator 1
+ 317 0180 1093 0606 		sts 1542,r17
+  86:glitchsimple.c ****     led_error(1);
+ 318               		.loc 1 86 0 discriminator 1
+ 319 0184 1093 0606 		sts 1542,r17
+  87:glitchsimple.c ****     led_error(1);
+ 320               		.loc 1 87 0 discriminator 1
+ 321 0188 1093 0606 		sts 1542,r17
+  88:glitchsimple.c ****     led_error(1);
+ 322               		.loc 1 88 0 discriminator 1
+ 323 018c 1093 0606 		sts 1542,r17
+  89:glitchsimple.c ****     led_error(1);
+ 324               		.loc 1 89 0 discriminator 1
+ 325 0190 1093 0606 		sts 1542,r17
+ 326               	.L16:
+  90:glitchsimple.c **** 
+  91:glitchsimple.c ****     //Several loops in order to try and prevent restarting
+  92:glitchsimple.c ****     while(1){
+  93:glitchsimple.c ****     ;
+  94:glitchsimple.c ****     }
+ 327               		.loc 1 94 0 discriminator 1
+ 328 0194 00C0      		rjmp .L16
+ 329               		.cfi_endproc
+ 330               	.LFE14:
+ 332               	.global	glitch2
+ 334               	glitch2:
+ 335               	.LFB15:
+  95:glitchsimple.c ****     while(1){
+  96:glitchsimple.c ****     ;
+  97:glitchsimple.c ****     }
+  98:glitchsimple.c ****     while(1){
+  99:glitchsimple.c ****     ;
+ 100:glitchsimple.c ****     }
+ 101:glitchsimple.c ****     while(1){
+ 102:glitchsimple.c ****     ;
+ 103:glitchsimple.c ****     }
+ 104:glitchsimple.c ****     while(1){
+ 105:glitchsimple.c ****     ;
+ 106:glitchsimple.c ****     }    
+ 107:glitchsimple.c **** }
+ 108:glitchsimple.c **** 
+ 109:glitchsimple.c **** 
+ 110:glitchsimple.c **** void glitch2(void)
+ 111:glitchsimple.c **** {
+ 336               		.loc 1 111 0
+ 337               		.cfi_startproc
+ 338               	/* prologue: function */
+ 339               	/* frame size = 0 */
+ 340               	/* stack size = 0 */
+ 341               	.L__stack_usage = 0
+ 112:glitchsimple.c ****     char c;  
+ 113:glitchsimple.c ****     
+ 114:glitchsimple.c ****     putch('B');
+ 342               		.loc 1 114 0
+ 343 0196 82E4      		ldi r24,lo8(66)
+ 344 0198 0E94 0000 		call output_ch_0
+ 345               	.LVL14:
+ 115:glitchsimple.c ****        
+ 116:glitchsimple.c ****     c = getch();
+ 346               		.loc 1 116 0
+ 347 019c 0E94 0000 		call input_ch_0
+ 348               	.LVL15:
+ 117:glitchsimple.c ****     
+ 118:glitchsimple.c ****     trigger_high();
+ 349               		.loc 1 118 0
+ 350 01a0 91E0      		ldi r25,lo8(1)
+ 351 01a2 9093 0506 		sts 1541,r25
+ 119:glitchsimple.c ****     trigger_low();
+ 352               		.loc 1 119 0
+ 353 01a6 9093 0606 		sts 1542,r25
+ 120:glitchsimple.c ****     
+ 121:glitchsimple.c ****     if (c != 'q'){
+ 354               		.loc 1 121 0
+ 355 01aa 8137      		cpi r24,lo8(113)
+ 356 01ac 01F0      		breq .L19
+ 122:glitchsimple.c ****         putch('1');
+ 357               		.loc 1 122 0
+ 358 01ae 81E3      		ldi r24,lo8(49)
+ 359               	.LVL16:
+ 360 01b0 00C0      		rjmp .L21
+ 361               	.LVL17:
+ 362               	.L19:
+ 123:glitchsimple.c ****     } else {
+ 124:glitchsimple.c ****         putch('2');
+ 363               		.loc 1 124 0
+ 364 01b2 82E3      		ldi r24,lo8(50)
+ 365               	.LVL18:
+ 366               	.L21:
+ 367 01b4 0E94 0000 		call output_ch_0
+ 368               	.LVL19:
+ 125:glitchsimple.c ****     }
+ 126:glitchsimple.c ****     putch('\n');
+ 369               		.loc 1 126 0
+ 370 01b8 8AE0      		ldi r24,lo8(10)
+ 371 01ba 0E94 0000 		call output_ch_0
+ 372               	.LVL20:
+ 127:glitchsimple.c ****     putch('\n');
+ 373               		.loc 1 127 0
+ 374 01be 8AE0      		ldi r24,lo8(10)
+ 375 01c0 0E94 0000 		call output_ch_0
+ 376               	.LVL21:
+ 128:glitchsimple.c ****     putch('\n');
+ 377               		.loc 1 128 0
+ 378 01c4 8AE0      		ldi r24,lo8(10)
+ 379 01c6 0E94 0000 		call output_ch_0
+ 380               	.LVL22:
+ 129:glitchsimple.c ****     putch('\n');
+ 381               		.loc 1 129 0
+ 382 01ca 8AE0      		ldi r24,lo8(10)
+ 383 01cc 0C94 0000 		jmp output_ch_0
+ 384               	.LVL23:
+ 385               		.cfi_endproc
+ 386               	.LFE15:
+ 388               		.section	.rodata.str1.1
+ 389               	.LC2:
+ 390 0013 5061 7373 		.string	"Password:"
+ 390      776F 7264 
+ 390      3A00 
+ 391               	.LC4:
+ 392 001d 4465 6E69 		.string	"Denied\n"
+ 392      6564 0A00 
+ 393               	.LC5:
+ 394 0025 5765 6C63 		.string	"Welcome\n"
+ 394      6F6D 650A 
+ 394      00
+ 395               	.LC3:
+ 396 002e 746F 7563 		.string	"touch"
+ 396      6800 
+ 397               		.text
+ 398               	.global	glitch3
+ 400               	glitch3:
+ 401               	.LFB16:
+ 130:glitchsimple.c **** }
+ 131:glitchsimple.c **** 
+ 132:glitchsimple.c **** 
+ 133:glitchsimple.c **** void glitch3(void)
+ 134:glitchsimple.c **** {
+ 402               		.loc 1 134 0
+ 403               		.cfi_startproc
+ 404 01d0 1F93      		push r17
+ 405               	.LCFI10:
+ 406               		.cfi_def_cfa_offset 4
+ 407               		.cfi_offset 17, -3
+ 408 01d2 CF93      		push r28
+ 409               	.LCFI11:
+ 410               		.cfi_def_cfa_offset 5
+ 411               		.cfi_offset 28, -4
+ 412 01d4 DF93      		push r29
+ 413               	.LCFI12:
+ 414               		.cfi_def_cfa_offset 6
+ 415               		.cfi_offset 29, -5
+ 416 01d6 CDB7      		in r28,__SP_L__
+ 417 01d8 DEB7      		in r29,__SP_H__
+ 418               	.LCFI13:
+ 419               		.cfi_def_cfa_register 28
+ 420 01da 6697      		sbiw r28,22
+ 421               	.LCFI14:
+ 422               		.cfi_def_cfa_offset 28
+ 423 01dc CDBF      		out __SP_L__,r28
+ 424 01de DEBF      		out __SP_H__,r29
+ 425               	/* prologue: function */
+ 426               	/* frame size = 22 */
+ 427               	/* stack size = 25 */
+ 428               	.L__stack_usage = 25
+ 429               	.LVL24:
+ 135:glitchsimple.c ****     char inp[16];
+ 136:glitchsimple.c ****     char c = 'A';
+ 137:glitchsimple.c ****     unsigned char cnt = 0;
+ 138:glitchsimple.c ****     uart_puts("Password:");
+ 430               		.loc 1 138 0
+ 431 01e0 80E0      		ldi r24,lo8(.LC2)
+ 432 01e2 90E0      		ldi r25,hi8(.LC2)
+ 433 01e4 0E94 0000 		call uart_puts
+ 434               	.LVL25:
+ 137:glitchsimple.c ****     uart_puts("Password:");
+ 435               		.loc 1 137 0
+ 436 01e8 10E0      		ldi r17,0
+ 136:glitchsimple.c ****     unsigned char cnt = 0;
+ 437               		.loc 1 136 0
+ 438 01ea 81E4      		ldi r24,lo8(65)
+ 439               	.LVL26:
+ 440               	.L23:
+ 139:glitchsimple.c ****     
+ 140:glitchsimple.c ****     while((c != '\n') & (cnt < 16)){
+ 441               		.loc 1 140 0
+ 442 01ec 1031      		cpi r17,lo8(16)
+ 443 01ee 00F4      		brsh .L31
+ 444 01f0 8A30      		cpi r24,lo8(10)
+ 445 01f2 01F0      		breq .L31
+ 141:glitchsimple.c ****         c = getch();
+ 446               		.loc 1 141 0
+ 447 01f4 0E94 0000 		call input_ch_0
+ 448               	.LVL27:
+ 142:glitchsimple.c ****         inp[cnt] = c;
+ 449               		.loc 1 142 0
+ 450 01f8 E1E0      		ldi r30,lo8(1)
+ 451 01fa F0E0      		ldi r31,0
+ 452 01fc EC0F      		add r30,r28
+ 453 01fe FD1F      		adc r31,r29
+ 454 0200 E10F      		add r30,r17
+ 455 0202 F11D      		adc r31,__zero_reg__
+ 456 0204 8083      		st Z,r24
+ 143:glitchsimple.c ****         cnt++;
+ 457               		.loc 1 143 0
+ 458 0206 1F5F      		subi r17,lo8(-(1))
+ 459               	.LVL28:
+ 460 0208 00C0      		rjmp .L23
+ 461               	.LVL29:
+ 462               	.L31:
+ 144:glitchsimple.c ****     }
+ 145:glitchsimple.c ****     
+ 146:glitchsimple.c ****     char passwd[] = "touch";
+ 463               		.loc 1 146 0
+ 464 020a 86E0      		ldi r24,lo8(6)
+ 465 020c E0E0      		ldi r30,lo8(.LC3)
+ 466 020e F0E0      		ldi r31,hi8(.LC3)
+ 467 0210 DE01      		movw r26,r28
+ 468 0212 5196      		adiw r26,17
+ 469               		0:
+ 470 0214 0190      		ld r0,Z+
+ 471 0216 0D92      		st X+,r0
+ 472 0218 8A95      		dec r24
+ 473 021a 01F4      		brne 0b
+ 474               	.LVL30:
+ 147:glitchsimple.c ****     char passok = 1;
+ 148:glitchsimple.c ****     
+ 149:glitchsimple.c ****     trigger_high();
+ 475               		.loc 1 149 0
+ 476 021c 81E0      		ldi r24,lo8(1)
+ 477 021e 8093 0506 		sts 1541,r24
+ 150:glitchsimple.c ****     trigger_low();
+ 478               		.loc 1 150 0
+ 479 0222 8093 0606 		sts 1542,r24
+ 480               	.LVL31:
+ 481 0226 DE01      		movw r26,r28
+ 482 0228 5196      		adiw r26,17
+ 483 022a FE01      		movw r30,r28
+ 484 022c 3196      		adiw r30,1
+ 485 022e 95E0      		ldi r25,lo8(5)
+ 486 0230 9E0F      		add r25,r30
+ 487               	.LVL32:
+ 488               	.L29:
+ 151:glitchsimple.c ****     
+ 152:glitchsimple.c ****     //Simple test - doesn't check for too-long password!
+ 153:glitchsimple.c ****     for(cnt = 0; cnt < 5; cnt++){
+ 154:glitchsimple.c ****         if (inp[cnt] != passwd[cnt]){
+ 489               		.loc 1 154 0
+ 490 0232 3191      		ld r19,Z+
+ 491 0234 2D91      		ld r18,X+
+ 492 0236 3213      		cpse r19,r18
+ 155:glitchsimple.c ****             passok = 0;
+ 493               		.loc 1 155 0
+ 494 0238 80E0      		ldi r24,0
+ 495               	.LVL33:
+ 496               	.L28:
+ 153:glitchsimple.c ****         if (inp[cnt] != passwd[cnt]){
+ 497               		.loc 1 153 0 discriminator 2
+ 498 023a 9E13      		cpse r25,r30
+ 499 023c 00C0      		rjmp .L29
+ 156:glitchsimple.c ****         }
+ 157:glitchsimple.c ****     }
+ 158:glitchsimple.c ****     
+ 159:glitchsimple.c ****     if (!passok){
+ 500               		.loc 1 159 0
+ 501 023e 8111      		cpse r24,__zero_reg__
+ 502 0240 00C0      		rjmp .L30
+ 160:glitchsimple.c ****         uart_puts("Denied\n");
+ 503               		.loc 1 160 0
+ 504 0242 80E0      		ldi r24,lo8(.LC4)
+ 505 0244 90E0      		ldi r25,hi8(.LC4)
+ 506               	.LVL34:
+ 507 0246 00C0      		rjmp .L35
+ 508               	.LVL35:
+ 509               	.L30:
+ 161:glitchsimple.c ****     } else {
+ 162:glitchsimple.c ****         uart_puts("Welcome\n");
+ 510               		.loc 1 162 0
+ 511 0248 80E0      		ldi r24,lo8(.LC5)
+ 512 024a 90E0      		ldi r25,hi8(.LC5)
+ 513               	.LVL36:
+ 514               	.L35:
+ 515               	/* epilogue start */
+ 163:glitchsimple.c ****     }
+ 164:glitchsimple.c **** }
+ 516               		.loc 1 164 0
+ 517 024c 6696      		adiw r28,22
+ 518 024e CDBF      		out __SP_L__,r28
+ 519 0250 DEBF      		out __SP_H__,r29
+ 520 0252 DF91      		pop r29
+ 521 0254 CF91      		pop r28
+ 522 0256 1F91      		pop r17
+ 162:glitchsimple.c ****     }
+ 523               		.loc 1 162 0
+ 524 0258 0C94 0000 		jmp uart_puts
+ 525               	.LVL37:
+ 526               		.cfi_endproc
+ 527               	.LFE16:
+ 529               		.section	.text.startup,"ax",@progbits
+ 530               	.global	main
+ 532               	main:
+ 533               	.LFB17:
+ 165:glitchsimple.c **** 
+ 166:glitchsimple.c **** int main(void){
+ 534               		.loc 1 166 0
+ 535               		.cfi_startproc
+ 536               	/* prologue: function */
+ 537               	/* frame size = 0 */
+ 538               	/* stack size = 0 */
+ 539               	.L__stack_usage = 0
+ 167:glitchsimple.c **** 
+ 168:glitchsimple.c ****     platform_init();
+ 540               		.loc 1 168 0
+ 541 0000 0E94 0000 		call platform_init
+ 542               	.LVL38:
+ 169:glitchsimple.c **** 	init_uart();	
+ 543               		.loc 1 169 0
+ 544 0004 0E94 0000 		call init_uart0
+ 545               	.LVL39:
+ 170:glitchsimple.c **** 	trigger_setup();
+ 546               		.loc 1 170 0
+ 547 0008 81E0      		ldi r24,lo8(1)
+ 548 000a 8093 0106 		sts 1537,r24
+ 171:glitchsimple.c **** 
+ 172:glitchsimple.c ****  	/* Uncomment this to get a HELLO message for debug */
+ 173:glitchsimple.c **** 	putch('h');
+ 549               		.loc 1 173 0
+ 550 000e 88E6      		ldi r24,lo8(104)
+ 551 0010 0E94 0000 		call output_ch_0
+ 552               	.LVL40:
+ 174:glitchsimple.c **** 	putch('e');
+ 553               		.loc 1 174 0
+ 554 0014 85E6      		ldi r24,lo8(101)
+ 555 0016 0E94 0000 		call output_ch_0
+ 556               	.LVL41:
+ 175:glitchsimple.c **** 	putch('l');
+ 557               		.loc 1 175 0
+ 558 001a 8CE6      		ldi r24,lo8(108)
+ 559 001c 0E94 0000 		call output_ch_0
+ 560               	.LVL42:
+ 176:glitchsimple.c **** 	putch('l');
+ 561               		.loc 1 176 0
+ 562 0020 8CE6      		ldi r24,lo8(108)
+ 563 0022 0E94 0000 		call output_ch_0
+ 564               	.LVL43:
+ 177:glitchsimple.c **** 	putch('o');
+ 565               		.loc 1 177 0
+ 566 0026 8FE6      		ldi r24,lo8(111)
+ 567 0028 0E94 0000 		call output_ch_0
+ 568               	.LVL44:
+ 178:glitchsimple.c **** 	putch('\n');
+ 569               		.loc 1 178 0
+ 570 002c 8AE0      		ldi r24,lo8(10)
+ 571 002e 0E94 0000 		call output_ch_0
+ 572               	.LVL45:
+ 179:glitchsimple.c ****     //_delay_ms(20);
+ 180:glitchsimple.c **** 		
+ 181:glitchsimple.c ****         
+ 182:glitchsimple.c ****     while(1){
+ 183:glitchsimple.c ****         glitch1();
+ 573               		.loc 1 183 0
+ 574 0032 0E94 0000 		call glitch1
+ 575               	.LVL46:
+ 576               		.cfi_endproc
+ 577               	.LFE17:
+ 579               		.text
+ 580               	.Letext0:
+ 581               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 582               		.file 3 "/usr/lib/avr/include/avr/iox128d3.h"
+ 583               		.file 4 ".././hal/hal.h"
+ 584               		.file 5 ".././hal/xmega/uart.h"
+ 585               		.file 6 "/usr/lib/avr/include/stdio.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 glitchsimple.c
+     /tmp/cc11ixf3.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc11ixf3.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc11ixf3.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc11ixf3.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/cc11ixf3.s:6      *ABS*:0000000000000034 __CCP__
+     /tmp/cc11ixf3.s:7      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc11ixf3.s:8      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc11ixf3.s:14     .text:0000000000000000 uart_puts
+     /tmp/cc11ixf3.s:62     .text:0000000000000018 glitch_infinite
+     /tmp/cc11ixf3.s:241    .text:0000000000000118 glitch1
+     /tmp/cc11ixf3.s:334    .text:0000000000000196 glitch2
+     /tmp/cc11ixf3.s:400    .text:00000000000001d0 glitch3
+     /tmp/cc11ixf3.s:532    .text.startup:0000000000000000 main
+
+UNDEFINED SYMBOLS
+output_ch_0
+sprintf
+input_ch_0
+platform_init
+init_uart0
+__do_copy_data

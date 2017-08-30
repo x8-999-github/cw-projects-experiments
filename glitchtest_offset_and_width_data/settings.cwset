@@ -1,0 +1,164 @@
+[Aux Settings]
+[[Frequency Counter]]
+Device = None
+[Aux Settings]
+[[GPIO Toggle]]
+GPIO Pin = TargetIO3
+Standby State = Low
+Toggle Length = 250
+Post-Toggle Delay = 250
+Trigger = Trace Done
+[Aux Settings]
+[[Reset AVR via STK500]]
+STK500.exe Path = C:\Program Files (x86)\Atmel\AVR Tools\STK500\Stk500.exe
+AVR Part = atmega328p
+[Aux Settings]
+[[Reset AVR/XMEGA via CW-Lite]]
+Interface = xmega (PDI)
+Delay (Pre-Arm) = 0
+Delay (Post-Arm) = 0
+Reset Timing = Pre-Arm
+[Trace Settings]
+[[ChipWhisperer/Native]]
+[Trace Settings]
+[[DPAContestv3]]
+[Target Settings]
+[[ChipWhisperer CW305 (Artix-7)]]
+[[[PLL Settings]]]
+[[[[CLK-SMA (X6)]]]]
+[[[PLL Settings]]]
+[[[[CLK-N13 (FGPA Pin N13)]]]]
+CLK-N13 Source = PLL1
+[[[PLL Settings]]]
+[[[[CLK-E12 (FGPA Pin E12)]]]]
+CLK-E12 Source = PLL2
+[[[PLL Settings]]]
+[[ChipWhisperer CW305 (Artix-7)]]
+Disable CLKUSB For Capture = True
+Time CLKUSB Disabled for = 50
+CLKUSB Manual Setting = True
+[[[FPGA Bitstream]]]
+Bitstream File = 
+[Target Settings]
+[[SPI Flash Reprogrammer]]
+Connection = None
+Input Length (Bytes) = 16
+Write Address (Hex) = 0x1000
+Flash Chip = W25Q32
+[Target Settings]
+[[Simple Serial]]
+Connection = NewAE USB (CWLite/CW1200)
+Key Length (Bytes) = 16
+Input Length (Bytes) = 16
+Output Length (Bytes) = 16
+[[[Protocol Version]]]
+Version = 1.0
+Timeout (ms) = 20
+[[Simple Serial]]
+Preset Mode = Custom
+Init Command = 
+Load Key Command = 
+Load Input Command = 
+Go Command = 
+Output Format = $GLITCH$
+[[[NewAE USB (CWLite/CW1200)]]]
+baud = 38400
+[Target Settings]
+[[Smart Card]]
+Reader Hardware = None
+SmartCard Protocol = None
+[Generic Settings]
+Scope Module = ChipWhisperer/OpenADC
+Target Module = Simple Serial
+Trace Format = None
+Auxiliary Module = Reset AVR/XMEGA via CW-Lite
+[[Acquisition Settings]]
+Number of Traces = 3025.0
+Number of Sets = 1
+Key/Text Pattern = Basic
+[Generic Settings]
+[[Basic]]
+Key = Fixed
+Fixed Encryption Key = 2B 7E 15 16 28 AE D2 A6 AB F7 15 88 09 CF 4F 3C
+Plaintext = Random
+Fixed Plaintext = D3 A9 5A 3C 52 FC 3E 04 42 5E C8 1C C1 CF 5D A6
+[Scope Settings]
+[[ChipWhisperer/OpenADC]]
+Connection = NewAE USB (CWLite/CW1200)
+Auto-Refresh DCM Status = True
+[[[NewAE USB (CWLite/CW1200)]]]
+[[[[ChipWisperer-Lite USB]]]]
+[[ChipWhisperer/OpenADC]]
+[[[Serial Port (LX9)]]]
+Selected Port = 
+[[ChipWhisperer/OpenADC]]
+[[[OpenADC]]]
+[[[[HW Information]]]]
+[[[OpenADC]]]
+[[[[Gain Setting]]]]
+Mode = low
+Setting = 40
+[[[OpenADC]]]
+[[[[Trigger Setup]]]]
+Mode = rising edge
+Timeout (secs) = 2
+Offset = 0
+Pre-Trigger Samples = 0
+Total Samples = 1000
+Downsample Factor = 1
+[[[OpenADC]]]
+[[[[Clock Setup]]]]
+[[[[[ADC Clock]]]]]
+Source = CLKGEN x4 via DCM
+Phase Adjust = 0
+[[[[Clock Setup]]]]
+Freq Counter Src = CLKGEN Output
+[[[[[CLKGEN Settings]]]]]
+Input Source = system
+Input Frequency = 10000000.0
+Multiply = 2
+Divide = 26
+Desired Frequency = 7384615
+[[ChipWhisperer/OpenADC]]
+[[[CW Extra]]]
+[[[[CW Extra Settings]]]]
+[[[[[Trigger Pins]]]]]
+Target IO1 (Serial TXD) = False
+Target IO2 (Serial RXD) = False
+Target IO3 (SmartCard Serial) = False
+Target IO4 (Trigger Line) = True
+Collection Mode = OR
+[[[[CW Extra Settings]]]]
+Trigger Module = Basic (Edge/Level)
+Clock Source = Target IO-IN
+Target HS IO-Out = Glitch Module
+HS-Glitch Out Enable (High Power) = 0
+HS-Glitch Out Enable (Low Power) = 0
+[[[[[Target IOn Pins]]]]]
+Target IO1 = Serial RXD
+Target IO2 = Serial TXD
+Target IO3 = High-Z
+Target IO4 = High-Z
+[[[[CW Extra Settings]]]]
+[[[[[Target IOn GPIO Mode]]]]]
+Target IO1: GPIO = Disabled
+Target IO2: GPIO = Disabled
+Target IO3: GPIO = Disabled
+Target IO4: GPIO = Disabled
+nRST: GPIO = Default
+PDID: GPIO = Default
+PDIC: GPIO = Default
+[[[[CW Extra Settings]]]]
+Target Power State = True
+[[[CW Extra]]]
+[[[[Glitch Module]]]]
+Clock Source = CLKGEN
+Glitch Width (as % of period) = 8.0
+Glitch Width (fine adjust) = 0
+Glitch Offset (as % of period) = -30.0
+Glitch Offset (fine adjust) = 0
+Glitch Trigger = Ext Trigger:Single-Shot
+Single-Shot Arm = After Scope Arm
+Ext Trigger Offset = 0
+Repeat = 10
+Output Mode = Clock XORd

@@ -1,0 +1,768 @@
+   1               		.file	"usart_driver.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__CCP__ = 0x34
+   7               	__tmp_reg__ = 0
+   8               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+  11               		.cfi_sections	.debug_frame
+  12               	.global	USART_InterruptDriver_Initialize
+  14               	USART_InterruptDriver_Initialize:
+  15               	.LFB11:
+  16               		.file 1 ".././hal/xmega/usart_driver.c"
+   1:.././hal/xmega/usart_driver.c **** /* This file has been prepared for Doxygen automatic documentation generation.*/
+   2:.././hal/xmega/usart_driver.c **** /*! \file *********************************************************************
+   3:.././hal/xmega/usart_driver.c ****  *
+   4:.././hal/xmega/usart_driver.c ****  * \brief
+   5:.././hal/xmega/usart_driver.c ****  *      XMEGA USART driver source file.
+   6:.././hal/xmega/usart_driver.c ****  *
+   7:.././hal/xmega/usart_driver.c ****  *      This file contains the function implementations the XMEGA interrupt
+   8:.././hal/xmega/usart_driver.c ****  *      and polled USART driver.
+   9:.././hal/xmega/usart_driver.c ****  *
+  10:.././hal/xmega/usart_driver.c ****  *      The driver is not intended for size and/or speed critical code, since
+  11:.././hal/xmega/usart_driver.c ****  *      most functions are just a few lines of code, and the function call
+  12:.././hal/xmega/usart_driver.c ****  *      overhead would decrease code performance. The driver is intended for
+  13:.././hal/xmega/usart_driver.c ****  *      rapid prototyping and documentation purposes for getting started with
+  14:.././hal/xmega/usart_driver.c ****  *      the XMEGA ADC module.
+  15:.././hal/xmega/usart_driver.c ****  *
+  16:.././hal/xmega/usart_driver.c ****  *      For size and/or speed critical code, it is recommended to copy the
+  17:.././hal/xmega/usart_driver.c ****  *      function contents directly into your application instead of making
+  18:.././hal/xmega/usart_driver.c ****  *      a function call.
+  19:.././hal/xmega/usart_driver.c ****  *
+  20:.././hal/xmega/usart_driver.c ****  *      Some functions use the following construct:
+  21:.././hal/xmega/usart_driver.c ****  *          "some_register = ... | (some_parameter ? SOME_BIT_bm : 0) | ..."
+  22:.././hal/xmega/usart_driver.c ****  *      Although the use of the ternary operator ( if ? then : else ) is discouraged,
+  23:.././hal/xmega/usart_driver.c ****  *      in some occasions the operator makes it possible to write pretty clean and
+  24:.././hal/xmega/usart_driver.c ****  *      neat code. In this driver, the construct is used to set or not set a
+  25:.././hal/xmega/usart_driver.c ****  *      configuration bit based on a boolean input parameter, such as
+  26:.././hal/xmega/usart_driver.c ****  *      the "some_parameter" in the example above.
+  27:.././hal/xmega/usart_driver.c ****  *
+  28:.././hal/xmega/usart_driver.c ****  * \par Application note:
+  29:.././hal/xmega/usart_driver.c ****  *      AVR1307: Using the XMEGA USART
+  30:.././hal/xmega/usart_driver.c ****  *
+  31:.././hal/xmega/usart_driver.c ****  * \par Documentation
+  32:.././hal/xmega/usart_driver.c ****  *      For comprehensive code documentation, supported compilers, compiler
+  33:.././hal/xmega/usart_driver.c ****  *      settings and supported devices see readme.html
+  34:.././hal/xmega/usart_driver.c ****  *
+  35:.././hal/xmega/usart_driver.c ****  * \author
+  36:.././hal/xmega/usart_driver.c ****  *      Atmel Corporation: http://www.atmel.com \n
+  37:.././hal/xmega/usart_driver.c ****  *      Support email: avr@atmel.com
+  38:.././hal/xmega/usart_driver.c ****  *
+  39:.././hal/xmega/usart_driver.c ****  * $Revision: 1694 $
+  40:.././hal/xmega/usart_driver.c ****  * $Date: 2008-07-29 14:21:58 +0200 (ti, 29 jul 2008) $  \n
+  41:.././hal/xmega/usart_driver.c ****  *
+  42:.././hal/xmega/usart_driver.c ****  * Copyright (c) 2008, Atmel Corporation All rights reserved.
+  43:.././hal/xmega/usart_driver.c ****  *
+  44:.././hal/xmega/usart_driver.c ****  * Redistribution and use in source and binary forms, with or without
+  45:.././hal/xmega/usart_driver.c ****  * modification, are permitted provided that the following conditions are met:
+  46:.././hal/xmega/usart_driver.c ****  *
+  47:.././hal/xmega/usart_driver.c ****  * 1. Redistributions of source code must retain the above copyright notice,
+  48:.././hal/xmega/usart_driver.c ****  * this list of conditions and the following disclaimer.
+  49:.././hal/xmega/usart_driver.c ****  *
+  50:.././hal/xmega/usart_driver.c ****  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  51:.././hal/xmega/usart_driver.c ****  * this list of conditions and the following disclaimer in the documentation
+  52:.././hal/xmega/usart_driver.c ****  * and/or other materials provided with the distribution.
+  53:.././hal/xmega/usart_driver.c ****  *
+  54:.././hal/xmega/usart_driver.c ****  * 3. The name of ATMEL may not be used to endorse or promote products derived
+  55:.././hal/xmega/usart_driver.c ****  * from this software without specific prior written permission.
+  56:.././hal/xmega/usart_driver.c ****  *
+  57:.././hal/xmega/usart_driver.c ****  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+  58:.././hal/xmega/usart_driver.c ****  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  59:.././hal/xmega/usart_driver.c ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY AND
+  60:.././hal/xmega/usart_driver.c ****  * SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT,
+  61:.././hal/xmega/usart_driver.c ****  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  62:.././hal/xmega/usart_driver.c ****  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  63:.././hal/xmega/usart_driver.c ****  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  64:.././hal/xmega/usart_driver.c ****  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  65:.././hal/xmega/usart_driver.c ****  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  66:.././hal/xmega/usart_driver.c ****  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  67:.././hal/xmega/usart_driver.c ****  *****************************************************************************/
+  68:.././hal/xmega/usart_driver.c **** #include "usart_driver.h"
+  69:.././hal/xmega/usart_driver.c **** 
+  70:.././hal/xmega/usart_driver.c **** 
+  71:.././hal/xmega/usart_driver.c **** 
+  72:.././hal/xmega/usart_driver.c **** /*! \brief Initializes buffer and selects what USART module to use.
+  73:.././hal/xmega/usart_driver.c ****  *
+  74:.././hal/xmega/usart_driver.c ****  *  Initializes receive and transmit buffer and selects what USART module to use,
+  75:.././hal/xmega/usart_driver.c ****  *  and stores the data register empty interrupt level.
+  76:.././hal/xmega/usart_driver.c ****  *
+  77:.././hal/xmega/usart_driver.c ****  *  \param usart_data           The USART_data_t struct instance.
+  78:.././hal/xmega/usart_driver.c ****  *  \param usart                The USART module.
+  79:.././hal/xmega/usart_driver.c ****  *  \param dreIntLevel          Data register empty interrupt level.
+  80:.././hal/xmega/usart_driver.c ****  */
+  81:.././hal/xmega/usart_driver.c **** void USART_InterruptDriver_Initialize(USART_data_t * usart_data,
+  82:.././hal/xmega/usart_driver.c ****                                       USART_t * usart,
+  83:.././hal/xmega/usart_driver.c ****                                       USART_DREINTLVL_t dreIntLevel)
+  84:.././hal/xmega/usart_driver.c **** {
+  17               		.loc 1 84 0
+  18               		.cfi_startproc
+  19               	.LVL0:
+  20               	/* prologue: function */
+  21               	/* frame size = 0 */
+  22               	/* stack size = 0 */
+  23               	.L__stack_usage = 0
+  24 0000 FC01      		movw r30,r24
+  85:.././hal/xmega/usart_driver.c **** 	usart_data->usart = usart;
+  25               		.loc 1 85 0
+  26 0002 6083      		st Z,r22
+  27 0004 7183      		std Z+1,r23
+  86:.././hal/xmega/usart_driver.c **** 	usart_data->dreIntLevel = dreIntLevel;
+  28               		.loc 1 86 0
+  29 0006 4283      		std Z+2,r20
+  87:.././hal/xmega/usart_driver.c **** 
+  88:.././hal/xmega/usart_driver.c **** 	usart_data->buffer.RX_Tail = 0;
+  30               		.loc 1 88 0
+  31 0008 1486      		std Z+12,__zero_reg__
+  89:.././hal/xmega/usart_driver.c **** 	usart_data->buffer.RX_Head = 0;
+  32               		.loc 1 89 0
+  33 000a 1386      		std Z+11,__zero_reg__
+  90:.././hal/xmega/usart_driver.c **** 	usart_data->buffer.TX_Tail = 0;
+  34               		.loc 1 90 0
+  35 000c 1686      		std Z+14,__zero_reg__
+  91:.././hal/xmega/usart_driver.c **** 	usart_data->buffer.TX_Head = 0;
+  36               		.loc 1 91 0
+  37 000e 1586      		std Z+13,__zero_reg__
+  38 0010 0895      		ret
+  39               		.cfi_endproc
+  40               	.LFE11:
+  42               	.global	USART_InterruptDriver_DreInterruptLevel_Set
+  44               	USART_InterruptDriver_DreInterruptLevel_Set:
+  45               	.LFB12:
+  92:.././hal/xmega/usart_driver.c **** }
+  93:.././hal/xmega/usart_driver.c **** 
+  94:.././hal/xmega/usart_driver.c **** 
+  95:.././hal/xmega/usart_driver.c **** /*! \brief Set USART DRE interrupt level.
+  96:.././hal/xmega/usart_driver.c ****  *
+  97:.././hal/xmega/usart_driver.c ****  *  Set the interrupt level on Data Register interrupt.
+  98:.././hal/xmega/usart_driver.c ****  *
+  99:.././hal/xmega/usart_driver.c ****  *  \note Changing the DRE interrupt level in the interrupt driver while it is
+ 100:.././hal/xmega/usart_driver.c ****  *        running will not change the DRE interrupt level in the USART before the
+ 101:.././hal/xmega/usart_driver.c ****  *        DRE interrupt have been disabled and enabled again.
+ 102:.././hal/xmega/usart_driver.c ****  *
+ 103:.././hal/xmega/usart_driver.c ****  *  \param usart_data         The USART_data_t struct instance
+ 104:.././hal/xmega/usart_driver.c ****  *  \param dreIntLevel        Interrupt level of the DRE interrupt.
+ 105:.././hal/xmega/usart_driver.c ****  */
+ 106:.././hal/xmega/usart_driver.c **** void USART_InterruptDriver_DreInterruptLevel_Set(USART_data_t * usart_data,
+ 107:.././hal/xmega/usart_driver.c ****                                                  USART_DREINTLVL_t dreIntLevel)
+ 108:.././hal/xmega/usart_driver.c **** {
+  46               		.loc 1 108 0
+  47               		.cfi_startproc
+  48               	.LVL1:
+  49               	/* prologue: function */
+  50               	/* frame size = 0 */
+  51               	/* stack size = 0 */
+  52               	.L__stack_usage = 0
+ 109:.././hal/xmega/usart_driver.c **** 	usart_data->dreIntLevel = dreIntLevel;
+  53               		.loc 1 109 0
+  54 0012 FC01      		movw r30,r24
+  55 0014 6283      		std Z+2,r22
+  56 0016 0895      		ret
+  57               		.cfi_endproc
+  58               	.LFE12:
+  60               	.global	USART_TXBuffer_FreeSpace
+  62               	USART_TXBuffer_FreeSpace:
+  63               	.LFB13:
+ 110:.././hal/xmega/usart_driver.c **** }
+ 111:.././hal/xmega/usart_driver.c **** 
+ 112:.././hal/xmega/usart_driver.c **** 
+ 113:.././hal/xmega/usart_driver.c **** /*! \brief Test if there is data in the transmitter software buffer.
+ 114:.././hal/xmega/usart_driver.c ****  *
+ 115:.././hal/xmega/usart_driver.c ****  *  This function can be used to test if there is free space in the transmitter
+ 116:.././hal/xmega/usart_driver.c ****  *  software buffer.
+ 117:.././hal/xmega/usart_driver.c ****  *
+ 118:.././hal/xmega/usart_driver.c ****  *  \param usart_data The USART_data_t struct instance.
+ 119:.././hal/xmega/usart_driver.c ****  *
+ 120:.././hal/xmega/usart_driver.c ****  *  \retval true      There is data in the receive buffer.
+ 121:.././hal/xmega/usart_driver.c ****  *  \retval false     The receive buffer is empty.
+ 122:.././hal/xmega/usart_driver.c ****  */
+ 123:.././hal/xmega/usart_driver.c **** bool USART_TXBuffer_FreeSpace(USART_data_t * usart_data)
+ 124:.././hal/xmega/usart_driver.c **** {
+  64               		.loc 1 124 0
+  65               		.cfi_startproc
+  66               	.LVL2:
+  67               	/* prologue: function */
+  68               	/* frame size = 0 */
+  69               	/* stack size = 0 */
+  70               	.L__stack_usage = 0
+  71 0018 FC01      		movw r30,r24
+ 125:.././hal/xmega/usart_driver.c **** 	/* Make copies to make sure that volatile access is specified. */
+ 126:.././hal/xmega/usart_driver.c **** 	uint8_t tempHead = (usart_data->buffer.TX_Head + 1) & USART_TX_BUFFER_MASK;
+  72               		.loc 1 126 0
+  73 001a 9585      		ldd r25,Z+13
+  74               	.LVL3:
+ 127:.././hal/xmega/usart_driver.c **** 	uint8_t tempTail = usart_data->buffer.TX_Tail;
+  75               		.loc 1 127 0
+  76 001c 2685      		ldd r18,Z+14
+  77               	.LVL4:
+ 126:.././hal/xmega/usart_driver.c **** 	uint8_t tempTail = usart_data->buffer.TX_Tail;
+  78               		.loc 1 126 0
+  79 001e 9F5F      		subi r25,lo8(-(1))
+  80               	.LVL5:
+  81 0020 9370      		andi r25,lo8(3)
+  82               	.LVL6:
+ 128:.././hal/xmega/usart_driver.c **** 
+ 129:.././hal/xmega/usart_driver.c **** 	/* There are data left in the buffer unless Head and Tail are equal. */
+ 130:.././hal/xmega/usart_driver.c **** 	return (tempHead != tempTail);
+  83               		.loc 1 130 0
+  84 0022 81E0      		ldi r24,lo8(1)
+  85               	.LVL7:
+  86 0024 9213      		cpse r25,r18
+  87 0026 00C0      		rjmp .L4
+  88 0028 80E0      		ldi r24,0
+  89               	.L4:
+ 131:.././hal/xmega/usart_driver.c **** }
+  90               		.loc 1 131 0
+  91 002a 0895      		ret
+  92               		.cfi_endproc
+  93               	.LFE13:
+  95               	.global	USART_TXBuffer_PutByte
+  97               	USART_TXBuffer_PutByte:
+  98               	.LFB14:
+ 132:.././hal/xmega/usart_driver.c **** 
+ 133:.././hal/xmega/usart_driver.c **** 
+ 134:.././hal/xmega/usart_driver.c **** 
+ 135:.././hal/xmega/usart_driver.c **** /*! \brief Put data (5-8 bit character).
+ 136:.././hal/xmega/usart_driver.c ****  *
+ 137:.././hal/xmega/usart_driver.c ****  *  Stores data byte in TX software buffer and enables DRE interrupt if there
+ 138:.././hal/xmega/usart_driver.c ****  *  is free space in the TX software buffer.
+ 139:.././hal/xmega/usart_driver.c ****  *
+ 140:.././hal/xmega/usart_driver.c ****  *  \param usart_data The USART_data_t struct instance.
+ 141:.././hal/xmega/usart_driver.c ****  *  \param data       The data to send.
+ 142:.././hal/xmega/usart_driver.c ****  */
+ 143:.././hal/xmega/usart_driver.c **** bool USART_TXBuffer_PutByte(USART_data_t * usart_data, uint8_t data)
+ 144:.././hal/xmega/usart_driver.c **** {
+  99               		.loc 1 144 0
+ 100               		.cfi_startproc
+ 101               	.LVL8:
+ 102 002c 0F93      		push r16
+ 103               	.LCFI0:
+ 104               		.cfi_def_cfa_offset 4
+ 105               		.cfi_offset 16, -3
+ 106 002e 1F93      		push r17
+ 107               	.LCFI1:
+ 108               		.cfi_def_cfa_offset 5
+ 109               		.cfi_offset 17, -4
+ 110 0030 CF93      		push r28
+ 111               	.LCFI2:
+ 112               		.cfi_def_cfa_offset 6
+ 113               		.cfi_offset 28, -5
+ 114 0032 DF93      		push r29
+ 115               	.LCFI3:
+ 116               		.cfi_def_cfa_offset 7
+ 117               		.cfi_offset 29, -6
+ 118 0034 1F92      		push __zero_reg__
+ 119               	.LCFI4:
+ 120               		.cfi_def_cfa_offset 8
+ 121 0036 CDB7      		in r28,__SP_L__
+ 122 0038 DEB7      		in r29,__SP_H__
+ 123               	.LCFI5:
+ 124               		.cfi_def_cfa_register 28
+ 125               	/* prologue: function */
+ 126               	/* frame size = 1 */
+ 127               	/* stack size = 5 */
+ 128               	.L__stack_usage = 5
+ 129 003a 8C01      		movw r16,r24
+ 130               	.LVL9:
+ 145:.././hal/xmega/usart_driver.c **** 	uint8_t tempCTRLA;
+ 146:.././hal/xmega/usart_driver.c **** 	uint8_t tempTX_Head;
+ 147:.././hal/xmega/usart_driver.c **** 	bool TXBuffer_FreeSpace;
+ 148:.././hal/xmega/usart_driver.c **** 	USART_Buffer_t * TXbufPtr;
+ 149:.././hal/xmega/usart_driver.c **** 
+ 150:.././hal/xmega/usart_driver.c **** 	TXbufPtr = &usart_data->buffer;
+ 151:.././hal/xmega/usart_driver.c **** 	TXBuffer_FreeSpace = USART_TXBuffer_FreeSpace(usart_data);
+ 131               		.loc 1 151 0
+ 132 003c 6983      		std Y+1,r22
+ 133 003e 0E94 0000 		call USART_TXBuffer_FreeSpace
+ 134               	.LVL10:
+ 152:.././hal/xmega/usart_driver.c **** 
+ 153:.././hal/xmega/usart_driver.c **** 
+ 154:.././hal/xmega/usart_driver.c **** 	if(TXBuffer_FreeSpace)
+ 135               		.loc 1 154 0
+ 136 0042 6981      		ldd r22,Y+1
+ 137 0044 8823      		tst r24
+ 138 0046 01F0      		breq .L7
+ 155:.././hal/xmega/usart_driver.c **** 	{
+ 156:.././hal/xmega/usart_driver.c **** 	  	tempTX_Head = TXbufPtr->TX_Head;
+ 139               		.loc 1 156 0
+ 140 0048 D801      		movw r26,r16
+ 141 004a 1D96      		adiw r26,13
+ 142 004c 9C91      		ld r25,X
+ 143 004e 1D97      		sbiw r26,13
+ 144               	.LVL11:
+ 157:.././hal/xmega/usart_driver.c **** 	  	TXbufPtr->TX[tempTX_Head]= data;
+ 145               		.loc 1 157 0
+ 146 0050 F801      		movw r30,r16
+ 147 0052 E90F      		add r30,r25
+ 148 0054 F11D      		adc r31,__zero_reg__
+ 149 0056 6783      		std Z+7,r22
+ 158:.././hal/xmega/usart_driver.c **** 		/* Advance buffer head. */
+ 159:.././hal/xmega/usart_driver.c **** 		TXbufPtr->TX_Head = (tempTX_Head + 1) & USART_TX_BUFFER_MASK;
+ 150               		.loc 1 159 0
+ 151 0058 9F5F      		subi r25,lo8(-(1))
+ 152               	.LVL12:
+ 153 005a 9370      		andi r25,lo8(3)
+ 154               	.LVL13:
+ 155 005c F801      		movw r30,r16
+ 156 005e 9587      		std Z+13,r25
+ 160:.././hal/xmega/usart_driver.c **** 
+ 161:.././hal/xmega/usart_driver.c **** 		/* Enable DRE interrupt. */
+ 162:.././hal/xmega/usart_driver.c **** 		tempCTRLA = usart_data->usart->CTRLA;
+ 157               		.loc 1 162 0
+ 158 0060 0190      		ld __tmp_reg__,Z+
+ 159 0062 F081      		ld r31,Z
+ 160 0064 E02D      		mov r30,__tmp_reg__
+ 161 0066 9381      		ldd r25,Z+3
+ 162               	.LVL14:
+ 163:.././hal/xmega/usart_driver.c **** 		tempCTRLA = (tempCTRLA & ~USART_DREINTLVL_gm) | usart_data->dreIntLevel;
+ 163               		.loc 1 163 0
+ 164 0068 9C7F      		andi r25,lo8(-4)
+ 165               	.LVL15:
+ 166 006a 1296      		adiw r26,2
+ 167 006c 2C91      		ld r18,X
+ 168 006e 922B      		or r25,r18
+ 169               	.LVL16:
+ 164:.././hal/xmega/usart_driver.c **** 		usart_data->usart->CTRLA = tempCTRLA;
+ 170               		.loc 1 164 0
+ 171 0070 9383      		std Z+3,r25
+ 172               	.LVL17:
+ 173               	.L7:
+ 174               	/* epilogue start */
+ 165:.././hal/xmega/usart_driver.c **** 	}
+ 166:.././hal/xmega/usart_driver.c **** 	return TXBuffer_FreeSpace;
+ 167:.././hal/xmega/usart_driver.c **** }
+ 175               		.loc 1 167 0
+ 176 0072 0F90      		pop __tmp_reg__
+ 177 0074 DF91      		pop r29
+ 178 0076 CF91      		pop r28
+ 179 0078 1F91      		pop r17
+ 180 007a 0F91      		pop r16
+ 181               	.LVL18:
+ 182 007c 0895      		ret
+ 183               		.cfi_endproc
+ 184               	.LFE14:
+ 186               	.global	USART_RXBufferData_Available
+ 188               	USART_RXBufferData_Available:
+ 189               	.LFB15:
+ 168:.././hal/xmega/usart_driver.c **** 
+ 169:.././hal/xmega/usart_driver.c **** 
+ 170:.././hal/xmega/usart_driver.c **** 
+ 171:.././hal/xmega/usart_driver.c **** /*! \brief Test if there is data in the receive software buffer.
+ 172:.././hal/xmega/usart_driver.c ****  *
+ 173:.././hal/xmega/usart_driver.c ****  *  This function can be used to test if there is data in the receive software
+ 174:.././hal/xmega/usart_driver.c ****  *  buffer.
+ 175:.././hal/xmega/usart_driver.c ****  *
+ 176:.././hal/xmega/usart_driver.c ****  *  \param usart_data         The USART_data_t struct instance
+ 177:.././hal/xmega/usart_driver.c ****  *
+ 178:.././hal/xmega/usart_driver.c ****  *  \retval true      There is data in the receive buffer.
+ 179:.././hal/xmega/usart_driver.c ****  *  \retval false     The receive buffer is empty.
+ 180:.././hal/xmega/usart_driver.c ****  */
+ 181:.././hal/xmega/usart_driver.c **** bool USART_RXBufferData_Available(USART_data_t * usart_data)
+ 182:.././hal/xmega/usart_driver.c **** {
+ 190               		.loc 1 182 0
+ 191               		.cfi_startproc
+ 192               	.LVL19:
+ 193               	/* prologue: function */
+ 194               	/* frame size = 0 */
+ 195               	/* stack size = 0 */
+ 196               	.L__stack_usage = 0
+ 183:.././hal/xmega/usart_driver.c **** 	/* Make copies to make sure that volatile access is specified. */
+ 184:.././hal/xmega/usart_driver.c **** 	uint8_t tempHead = usart_data->buffer.RX_Head;
+ 197               		.loc 1 184 0
+ 198 007e FC01      		movw r30,r24
+ 199 0080 2385      		ldd r18,Z+11
+ 200               	.LVL20:
+ 185:.././hal/xmega/usart_driver.c **** 	uint8_t tempTail = usart_data->buffer.RX_Tail;
+ 201               		.loc 1 185 0
+ 202 0082 9485      		ldd r25,Z+12
+ 203               	.LVL21:
+ 186:.././hal/xmega/usart_driver.c **** 
+ 187:.././hal/xmega/usart_driver.c **** 	/* There are data left in the buffer unless Head and Tail are equal. */
+ 188:.././hal/xmega/usart_driver.c **** 	return (tempHead != tempTail);
+ 204               		.loc 1 188 0
+ 205 0084 81E0      		ldi r24,lo8(1)
+ 206               	.LVL22:
+ 207 0086 2913      		cpse r18,r25
+ 208 0088 00C0      		rjmp .L12
+ 209 008a 80E0      		ldi r24,0
+ 210               	.L12:
+ 189:.././hal/xmega/usart_driver.c **** }
+ 211               		.loc 1 189 0
+ 212 008c 0895      		ret
+ 213               		.cfi_endproc
+ 214               	.LFE15:
+ 216               	.global	USART_RXBuffer_GetByte
+ 218               	USART_RXBuffer_GetByte:
+ 219               	.LFB16:
+ 190:.././hal/xmega/usart_driver.c **** 
+ 191:.././hal/xmega/usart_driver.c **** 
+ 192:.././hal/xmega/usart_driver.c **** 
+ 193:.././hal/xmega/usart_driver.c **** /*! \brief Get received data (5-8 bit character).
+ 194:.././hal/xmega/usart_driver.c ****  *
+ 195:.././hal/xmega/usart_driver.c ****  *  The function USART_RXBufferData_Available should be used before this
+ 196:.././hal/xmega/usart_driver.c ****  *  function is used to ensure that data is available.
+ 197:.././hal/xmega/usart_driver.c ****  *
+ 198:.././hal/xmega/usart_driver.c ****  *  Returns data from RX software buffer.
+ 199:.././hal/xmega/usart_driver.c ****  *
+ 200:.././hal/xmega/usart_driver.c ****  *  \param usart_data       The USART_data_t struct instance.
+ 201:.././hal/xmega/usart_driver.c ****  *
+ 202:.././hal/xmega/usart_driver.c ****  *  \return         Received data.
+ 203:.././hal/xmega/usart_driver.c ****  */
+ 204:.././hal/xmega/usart_driver.c **** uint8_t USART_RXBuffer_GetByte(USART_data_t * usart_data)
+ 205:.././hal/xmega/usart_driver.c **** {
+ 220               		.loc 1 205 0
+ 221               		.cfi_startproc
+ 222               	.LVL23:
+ 223               	/* prologue: function */
+ 224               	/* frame size = 0 */
+ 225               	/* stack size = 0 */
+ 226               	.L__stack_usage = 0
+ 227 008e FC01      		movw r30,r24
+ 228               	.LVL24:
+ 206:.././hal/xmega/usart_driver.c **** 	USART_Buffer_t * bufPtr;
+ 207:.././hal/xmega/usart_driver.c **** 	uint8_t ans;
+ 208:.././hal/xmega/usart_driver.c **** 
+ 209:.././hal/xmega/usart_driver.c **** 	bufPtr = &usart_data->buffer;
+ 210:.././hal/xmega/usart_driver.c **** 	ans = (bufPtr->RX[bufPtr->RX_Tail]);
+ 229               		.loc 1 210 0
+ 230 0090 8485      		ldd r24,Z+12
+ 231               	.LVL25:
+ 232 0092 DF01      		movw r26,r30
+ 233 0094 A80F      		add r26,r24
+ 234 0096 B11D      		adc r27,__zero_reg__
+ 235 0098 1396      		adiw r26,3
+ 236 009a 8C91      		ld r24,X
+ 237               	.LVL26:
+ 211:.././hal/xmega/usart_driver.c **** 
+ 212:.././hal/xmega/usart_driver.c **** 	/* Advance buffer tail. */
+ 213:.././hal/xmega/usart_driver.c **** 	bufPtr->RX_Tail = (bufPtr->RX_Tail + 1) & USART_RX_BUFFER_MASK;
+ 238               		.loc 1 213 0
+ 239 009c 9485      		ldd r25,Z+12
+ 240 009e 9F5F      		subi r25,lo8(-(1))
+ 241 00a0 9370      		andi r25,lo8(3)
+ 242 00a2 9487      		std Z+12,r25
+ 214:.././hal/xmega/usart_driver.c **** 
+ 215:.././hal/xmega/usart_driver.c **** 	return ans;
+ 216:.././hal/xmega/usart_driver.c **** }
+ 243               		.loc 1 216 0
+ 244 00a4 0895      		ret
+ 245               		.cfi_endproc
+ 246               	.LFE16:
+ 248               	.global	USART_RXComplete
+ 250               	USART_RXComplete:
+ 251               	.LFB17:
+ 217:.././hal/xmega/usart_driver.c **** 
+ 218:.././hal/xmega/usart_driver.c **** 
+ 219:.././hal/xmega/usart_driver.c **** 
+ 220:.././hal/xmega/usart_driver.c **** /*! \brief RX Complete Interrupt Service Routine.
+ 221:.././hal/xmega/usart_driver.c ****  *
+ 222:.././hal/xmega/usart_driver.c ****  *  RX Complete Interrupt Service Routine.
+ 223:.././hal/xmega/usart_driver.c ****  *  Stores received data in RX software buffer.
+ 224:.././hal/xmega/usart_driver.c ****  *
+ 225:.././hal/xmega/usart_driver.c ****  *  \param usart_data      The USART_data_t struct instance.
+ 226:.././hal/xmega/usart_driver.c ****  */
+ 227:.././hal/xmega/usart_driver.c **** bool USART_RXComplete(USART_data_t * usart_data)
+ 228:.././hal/xmega/usart_driver.c **** {
+ 252               		.loc 1 228 0
+ 253               		.cfi_startproc
+ 254               	.LVL27:
+ 255               	/* prologue: function */
+ 256               	/* frame size = 0 */
+ 257               	/* stack size = 0 */
+ 258               	.L__stack_usage = 0
+ 259 00a6 FC01      		movw r30,r24
+ 260               	.LVL28:
+ 229:.././hal/xmega/usart_driver.c **** 	USART_Buffer_t * bufPtr;
+ 230:.././hal/xmega/usart_driver.c **** 	bool ans;
+ 231:.././hal/xmega/usart_driver.c **** 
+ 232:.././hal/xmega/usart_driver.c **** 	bufPtr = &usart_data->buffer;
+ 233:.././hal/xmega/usart_driver.c **** 	/* Advance buffer head. */
+ 234:.././hal/xmega/usart_driver.c **** 	uint8_t tempRX_Head = (bufPtr->RX_Head + 1) & USART_RX_BUFFER_MASK;
+ 261               		.loc 1 234 0
+ 262 00a8 8385      		ldd r24,Z+11
+ 263               	.LVL29:
+ 264 00aa 8F5F      		subi r24,lo8(-(1))
+ 265 00ac 8370      		andi r24,lo8(3)
+ 266               	.LVL30:
+ 235:.././hal/xmega/usart_driver.c **** 
+ 236:.././hal/xmega/usart_driver.c **** 	/* Check for overflow. */
+ 237:.././hal/xmega/usart_driver.c **** 	uint8_t tempRX_Tail = bufPtr->RX_Tail;
+ 267               		.loc 1 237 0
+ 268 00ae 2485      		ldd r18,Z+12
+ 269               	.LVL31:
+ 238:.././hal/xmega/usart_driver.c **** 	uint8_t data = usart_data->usart->DATA;
+ 270               		.loc 1 238 0
+ 271 00b0 A081      		ld r26,Z
+ 272 00b2 B181      		ldd r27,Z+1
+ 273 00b4 9C91      		ld r25,X
+ 274               	.LVL32:
+ 239:.././hal/xmega/usart_driver.c **** 
+ 240:.././hal/xmega/usart_driver.c **** 	if (tempRX_Head == tempRX_Tail) {
+ 275               		.loc 1 240 0
+ 276 00b6 8217      		cp r24,r18
+ 277 00b8 01F0      		breq .L16
+ 278               	.LVL33:
+ 241:.././hal/xmega/usart_driver.c **** 	  	ans = false;
+ 242:.././hal/xmega/usart_driver.c **** 	}else{
+ 243:.././hal/xmega/usart_driver.c **** 		ans = true;
+ 244:.././hal/xmega/usart_driver.c **** 		usart_data->buffer.RX[usart_data->buffer.RX_Head] = data;
+ 279               		.loc 1 244 0
+ 280 00ba 2385      		ldd r18,Z+11
+ 281               	.LVL34:
+ 282 00bc DF01      		movw r26,r30
+ 283 00be A20F      		add r26,r18
+ 284 00c0 B11D      		adc r27,__zero_reg__
+ 285 00c2 1396      		adiw r26,3
+ 286 00c4 9C93      		st X,r25
+ 245:.././hal/xmega/usart_driver.c **** 		usart_data->buffer.RX_Head = tempRX_Head;
+ 287               		.loc 1 245 0
+ 288 00c6 8387      		std Z+11,r24
+ 243:.././hal/xmega/usart_driver.c **** 		usart_data->buffer.RX[usart_data->buffer.RX_Head] = data;
+ 289               		.loc 1 243 0
+ 290 00c8 81E0      		ldi r24,lo8(1)
+ 291               	.LVL35:
+ 292 00ca 0895      		ret
+ 293               	.LVL36:
+ 294               	.L16:
+ 241:.././hal/xmega/usart_driver.c **** 	  	ans = false;
+ 295               		.loc 1 241 0
+ 296 00cc 80E0      		ldi r24,0
+ 297               	.LVL37:
+ 246:.././hal/xmega/usart_driver.c **** 	}
+ 247:.././hal/xmega/usart_driver.c **** 	return ans;
+ 248:.././hal/xmega/usart_driver.c **** }
+ 298               		.loc 1 248 0
+ 299 00ce 0895      		ret
+ 300               		.cfi_endproc
+ 301               	.LFE17:
+ 303               	.global	USART_DataRegEmpty
+ 305               	USART_DataRegEmpty:
+ 306               	.LFB18:
+ 249:.././hal/xmega/usart_driver.c **** 
+ 250:.././hal/xmega/usart_driver.c **** 
+ 251:.././hal/xmega/usart_driver.c **** 
+ 252:.././hal/xmega/usart_driver.c **** /*! \brief Data Register Empty Interrupt Service Routine.
+ 253:.././hal/xmega/usart_driver.c ****  *
+ 254:.././hal/xmega/usart_driver.c ****  *  Data Register Empty Interrupt Service Routine.
+ 255:.././hal/xmega/usart_driver.c ****  *  Transmits one byte from TX software buffer. Disables DRE interrupt if buffer
+ 256:.././hal/xmega/usart_driver.c ****  *  is empty. Argument is pointer to USART (USART_data_t).
+ 257:.././hal/xmega/usart_driver.c ****  *
+ 258:.././hal/xmega/usart_driver.c ****  *  \param usart_data      The USART_data_t struct instance.
+ 259:.././hal/xmega/usart_driver.c ****  */
+ 260:.././hal/xmega/usart_driver.c **** void USART_DataRegEmpty(USART_data_t * usart_data)
+ 261:.././hal/xmega/usart_driver.c **** {
+ 307               		.loc 1 261 0
+ 308               		.cfi_startproc
+ 309               	.LVL38:
+ 310 00d0 CF93      		push r28
+ 311               	.LCFI6:
+ 312               		.cfi_def_cfa_offset 4
+ 313               		.cfi_offset 28, -3
+ 314 00d2 DF93      		push r29
+ 315               	.LCFI7:
+ 316               		.cfi_def_cfa_offset 5
+ 317               		.cfi_offset 29, -4
+ 318               	/* prologue: function */
+ 319               	/* frame size = 0 */
+ 320               	/* stack size = 2 */
+ 321               	.L__stack_usage = 2
+ 322 00d4 FC01      		movw r30,r24
+ 323               	.LVL39:
+ 262:.././hal/xmega/usart_driver.c **** 	USART_Buffer_t * bufPtr;
+ 263:.././hal/xmega/usart_driver.c **** 	bufPtr = &usart_data->buffer;
+ 264:.././hal/xmega/usart_driver.c **** 
+ 265:.././hal/xmega/usart_driver.c **** 	/* Check if all data is transmitted. */
+ 266:.././hal/xmega/usart_driver.c **** 	uint8_t tempTX_Tail = usart_data->buffer.TX_Tail;
+ 324               		.loc 1 266 0
+ 325 00d6 8685      		ldd r24,Z+14
+ 326               	.LVL40:
+ 267:.././hal/xmega/usart_driver.c **** 	if (bufPtr->TX_Head == tempTX_Tail){
+ 327               		.loc 1 267 0
+ 328 00d8 9585      		ldd r25,Z+13
+ 329 00da A081      		ld r26,Z
+ 330 00dc B181      		ldd r27,Z+1
+ 331 00de 9813      		cpse r25,r24
+ 332 00e0 00C0      		rjmp .L18
+ 333               	.LBB2:
+ 268:.././hal/xmega/usart_driver.c **** 	    /* Disable DRE interrupts. */
+ 269:.././hal/xmega/usart_driver.c **** 		uint8_t tempCTRLA = usart_data->usart->CTRLA;
+ 334               		.loc 1 269 0
+ 335 00e2 1396      		adiw r26,3
+ 336 00e4 8C91      		ld r24,X
+ 337 00e6 1397      		sbiw r26,3
+ 338               	.LVL41:
+ 270:.././hal/xmega/usart_driver.c **** 		tempCTRLA = (tempCTRLA & ~USART_DREINTLVL_gm) | USART_DREINTLVL_OFF_gc;
+ 339               		.loc 1 270 0
+ 340 00e8 8C7F      		andi r24,lo8(-4)
+ 341               	.LVL42:
+ 271:.././hal/xmega/usart_driver.c **** 		usart_data->usart->CTRLA = tempCTRLA;
+ 342               		.loc 1 271 0
+ 343 00ea 1396      		adiw r26,3
+ 344 00ec 8C93      		st X,r24
+ 345               	.LBE2:
+ 346 00ee 00C0      		rjmp .L17
+ 347               	.LVL43:
+ 348               	.L18:
+ 349               	.LBB3:
+ 272:.././hal/xmega/usart_driver.c **** 
+ 273:.././hal/xmega/usart_driver.c **** 	}else{
+ 274:.././hal/xmega/usart_driver.c **** 		/* Start transmitting. */
+ 275:.././hal/xmega/usart_driver.c **** 		uint8_t data = bufPtr->TX[usart_data->buffer.TX_Tail];
+ 350               		.loc 1 275 0
+ 351 00f0 8685      		ldd r24,Z+14
+ 352               	.LVL44:
+ 353 00f2 EF01      		movw r28,r30
+ 354 00f4 C80F      		add r28,r24
+ 355 00f6 D11D      		adc r29,__zero_reg__
+ 356 00f8 8F81      		ldd r24,Y+7
+ 357               	.LVL45:
+ 276:.././hal/xmega/usart_driver.c **** 		usart_data->usart->DATA = data;
+ 358               		.loc 1 276 0
+ 359 00fa 8C93      		st X,r24
+ 277:.././hal/xmega/usart_driver.c **** 
+ 278:.././hal/xmega/usart_driver.c **** 		/* Advance buffer tail. */
+ 279:.././hal/xmega/usart_driver.c **** 		bufPtr->TX_Tail = (bufPtr->TX_Tail + 1) & USART_TX_BUFFER_MASK;
+ 360               		.loc 1 279 0
+ 361 00fc 8685      		ldd r24,Z+14
+ 362               	.LVL46:
+ 363 00fe 8F5F      		subi r24,lo8(-(1))
+ 364 0100 8370      		andi r24,lo8(3)
+ 365 0102 8687      		std Z+14,r24
+ 366               	.LVL47:
+ 367               	.L17:
+ 368               	/* epilogue start */
+ 369               	.LBE3:
+ 280:.././hal/xmega/usart_driver.c **** 	}
+ 281:.././hal/xmega/usart_driver.c **** }
+ 370               		.loc 1 281 0
+ 371 0104 DF91      		pop r29
+ 372 0106 CF91      		pop r28
+ 373 0108 0895      		ret
+ 374               		.cfi_endproc
+ 375               	.LFE18:
+ 377               	.global	USART_NineBits_PutChar
+ 379               	USART_NineBits_PutChar:
+ 380               	.LFB19:
+ 282:.././hal/xmega/usart_driver.c **** 
+ 283:.././hal/xmega/usart_driver.c **** 
+ 284:.././hal/xmega/usart_driver.c **** /*! \brief Put data (9 bit character).
+ 285:.././hal/xmega/usart_driver.c ****  *
+ 286:.././hal/xmega/usart_driver.c ****  *  Use the function USART_IsTXDataRegisterEmpty before using this function to
+ 287:.././hal/xmega/usart_driver.c ****  *  put 9 bit character to the TX register.
+ 288:.././hal/xmega/usart_driver.c ****  *
+ 289:.././hal/xmega/usart_driver.c ****  *  \param usart      The USART module.
+ 290:.././hal/xmega/usart_driver.c ****  *  \param data       The data to send.
+ 291:.././hal/xmega/usart_driver.c ****  */
+ 292:.././hal/xmega/usart_driver.c **** void USART_NineBits_PutChar(USART_t * usart, uint16_t data)
+ 293:.././hal/xmega/usart_driver.c **** {
+ 381               		.loc 1 293 0
+ 382               		.cfi_startproc
+ 383               	.LVL48:
+ 384               	/* prologue: function */
+ 385               	/* frame size = 0 */
+ 386               	/* stack size = 0 */
+ 387               	.L__stack_usage = 0
+ 388 010a FC01      		movw r30,r24
+ 294:.././hal/xmega/usart_driver.c **** 	if(data & 0x0100) {
+ 295:.././hal/xmega/usart_driver.c **** 		usart->CTRLB |= USART_TXB8_bm;
+ 389               		.loc 1 295 0
+ 390 010c 8481      		ldd r24,Z+4
+ 391               	.LVL49:
+ 294:.././hal/xmega/usart_driver.c **** 	if(data & 0x0100) {
+ 392               		.loc 1 294 0
+ 393 010e 70FF      		sbrs r23,0
+ 394 0110 00C0      		rjmp .L21
+ 395               		.loc 1 295 0
+ 396 0112 8160      		ori r24,lo8(1)
+ 397 0114 00C0      		rjmp .L23
+ 398               	.L21:
+ 296:.././hal/xmega/usart_driver.c **** 	}else {
+ 297:.././hal/xmega/usart_driver.c **** 		usart->CTRLB &= ~USART_TXB8_bm;
+ 399               		.loc 1 297 0
+ 400 0116 8E7F      		andi r24,lo8(-2)
+ 401               	.L23:
+ 402 0118 8483      		std Z+4,r24
+ 298:.././hal/xmega/usart_driver.c **** 	}
+ 299:.././hal/xmega/usart_driver.c **** 
+ 300:.././hal/xmega/usart_driver.c **** 	usart->DATA = (data & 0x00FF);
+ 403               		.loc 1 300 0
+ 404 011a 6083      		st Z,r22
+ 405 011c 0895      		ret
+ 406               		.cfi_endproc
+ 407               	.LFE19:
+ 409               	.global	USART_NineBits_GetChar
+ 411               	USART_NineBits_GetChar:
+ 412               	.LFB20:
+ 301:.././hal/xmega/usart_driver.c **** }
+ 302:.././hal/xmega/usart_driver.c **** 
+ 303:.././hal/xmega/usart_driver.c **** 
+ 304:.././hal/xmega/usart_driver.c **** /*! \brief Get received data (9 bit character).
+ 305:.././hal/xmega/usart_driver.c ****  *
+ 306:.././hal/xmega/usart_driver.c ****  *  This function reads out the received 9 bit character (uint16_t).
+ 307:.././hal/xmega/usart_driver.c ****  *  Use the function USART_IsRXComplete to check if anything is received.
+ 308:.././hal/xmega/usart_driver.c ****  *
+ 309:.././hal/xmega/usart_driver.c ****  *  \param usart      The USART module.
+ 310:.././hal/xmega/usart_driver.c ****  *
+ 311:.././hal/xmega/usart_driver.c ****  *  \retval           Received data.
+ 312:.././hal/xmega/usart_driver.c ****  */
+ 313:.././hal/xmega/usart_driver.c **** uint16_t USART_NineBits_GetChar(USART_t * usart)
+ 314:.././hal/xmega/usart_driver.c **** {
+ 413               		.loc 1 314 0
+ 414               		.cfi_startproc
+ 415               	.LVL50:
+ 416               	/* prologue: function */
+ 417               	/* frame size = 0 */
+ 418               	/* stack size = 0 */
+ 419               	.L__stack_usage = 0
+ 420 011e FC01      		movw r30,r24
+ 315:.././hal/xmega/usart_driver.c **** 	if(usart->CTRLB & USART_RXB8_bm) {
+ 421               		.loc 1 315 0
+ 422 0120 8481      		ldd r24,Z+4
+ 423               	.LVL51:
+ 424 0122 80FF      		sbrs r24,0
+ 425 0124 00C0      		rjmp .L25
+ 316:.././hal/xmega/usart_driver.c **** 		return(0x0100 | usart->DATA);
+ 426               		.loc 1 316 0
+ 427 0126 8081      		ld r24,Z
+ 428 0128 90E0      		ldi r25,0
+ 429 012a 9160      		ori r25,1
+ 430 012c 0895      		ret
+ 431               	.L25:
+ 317:.././hal/xmega/usart_driver.c **** 	}else {
+ 318:.././hal/xmega/usart_driver.c **** 		return(usart->DATA);
+ 432               		.loc 1 318 0
+ 433 012e 8081      		ld r24,Z
+ 434 0130 90E0      		ldi r25,0
+ 319:.././hal/xmega/usart_driver.c **** 	}
+ 320:.././hal/xmega/usart_driver.c **** }
+ 435               		.loc 1 320 0
+ 436 0132 0895      		ret
+ 437               		.cfi_endproc
+ 438               	.LFE20:
+ 440               	.Letext0:
+ 441               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 442               		.file 3 "/usr/lib/avr/include/avr/iox128d3.h"
+ 443               		.file 4 ".././hal/xmega/usart_driver.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 usart_driver.c
+     /tmp/ccJlcULd.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccJlcULd.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccJlcULd.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccJlcULd.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/ccJlcULd.s:6      *ABS*:0000000000000034 __CCP__
+     /tmp/ccJlcULd.s:7      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccJlcULd.s:8      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccJlcULd.s:14     .text:0000000000000000 USART_InterruptDriver_Initialize
+     /tmp/ccJlcULd.s:44     .text:0000000000000012 USART_InterruptDriver_DreInterruptLevel_Set
+     /tmp/ccJlcULd.s:62     .text:0000000000000018 USART_TXBuffer_FreeSpace
+     /tmp/ccJlcULd.s:97     .text:000000000000002c USART_TXBuffer_PutByte
+     /tmp/ccJlcULd.s:188    .text:000000000000007e USART_RXBufferData_Available
+     /tmp/ccJlcULd.s:218    .text:000000000000008e USART_RXBuffer_GetByte
+     /tmp/ccJlcULd.s:250    .text:00000000000000a6 USART_RXComplete
+     /tmp/ccJlcULd.s:305    .text:00000000000000d0 USART_DataRegEmpty
+     /tmp/ccJlcULd.s:379    .text:000000000000010a USART_NineBits_PutChar
+     /tmp/ccJlcULd.s:411    .text:000000000000011e USART_NineBits_GetChar
+
+NO UNDEFINED SYMBOLS
