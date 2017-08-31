@@ -10,7 +10,7 @@ FPGA. To be able to compile this code you need to download the xilinx websuite. 
 Setup the environemnt by sourcing /opt/Xilinx/14.7/ISE_DS/.settings64.sh
 
 
-    kees@nb-kjongenburger:/opt/Xilinx/14.7/ISE_DS$ . settings64.sh 
+    kees@nb-:/opt/Xilinx/14.7/ISE_DS$ . settings64.sh 
     . /opt/Xilinx/14.7/ISE_DS/common/.settings64.sh /opt/Xilinx/14.7/ISE_DS/common
     . /opt/Xilinx/14.7/ISE_DS/EDK/.settings64.sh /opt/Xilinx/14.7/ISE_DS/EDK
     . /opt/Xilinx/14.7/ISE_DS/PlanAhead/.settings64.sh /opt/Xilinx/14.7/ISE_DS/PlanAhead
