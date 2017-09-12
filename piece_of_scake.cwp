@@ -1,5 +1,5 @@
 [Trace Management]
-tracefile0 = tmp/default_data/traces/config_2017.09.07-16.57.26_.cfg
+tracefile0 = piece_of_scake_data/traces/config_2017.09.07-16.57.26_.cfg
 enabled0 = True
 [ChipWhisperer]
 [[General Settings]]

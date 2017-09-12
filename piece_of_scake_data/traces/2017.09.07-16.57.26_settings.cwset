@@ -63,9 +63,9 @@ Result = 22.50390625
 Trigger Pin State = False
 Mode = rising edge
 Timeout (secs) = 2
-Offset = 1250
+Offset = 3000
 Pre-Trigger Samples = 0
-Total Samples = 3000
+Total Samples = 6000
 Downsample Factor = 1
 Trigger Active Count = 172436
 [[[OpenADC]]]
