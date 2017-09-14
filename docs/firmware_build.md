@@ -87,7 +87,7 @@ you end up with new files
     cp *.p zip/
     cp cwlite_ise/cwlite_interface.bit zip/
     cd zip
-    zip  ../../cwlite_keesj.zip *
+    zip  ../../cwlite_kees.zip *
     adding: cwlite-glitchoffset.p (deflated 70%)
     adding: cwlite-glitchwidth.p (deflated 72%)
     adding: cwlite_interface.bit (deflated 86%)
@@ -106,3 +106,13 @@ https://www.xilinx.com/support/documentation/sw_manuals/xilinx14_4/PlanAhead_Tut
 
 
 
+
+# Building the SAM3U firmware
+
+It looks like the tool to use is windows based and called Atmel studio.
+
+There is also a Linux port of the ARM compilers we are going to try and use.
+
+Posted question here:
+https://forum.newae.com/viewtopic.php?f=6&t=386
+http://www.microchip.com/development-tools/atmel-studio-7/avr-and-arm-toolchains-(c-compilers)
