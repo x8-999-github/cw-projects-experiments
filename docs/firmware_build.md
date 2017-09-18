@@ -124,6 +124,22 @@ On debian first install the gcc-arm-none-eabi package (it contains support for t
 
 	sudo apt-get install gcc-arm-none-eabi
 
-And follow 
+And follow run make -f Makefile.linux under hardware/capture/chipwhisperer-lite/sam3u_fw/SAM3U_VendorExample/Debug
+Next flash the resulting firmware (after erasing the firmware) using bossac-lin32 found in ../../bossa/ 
+e.g. 
 
+./bossac-lin32  -i
+Device found on ttyACM0
+Device       : ATSAM3U2
+Chip ID      : 280a0761
+Version      : v1.1 Oct 16 2008 17:28:07
+Address      : 524288
+Pages        : 512
+Page Size    : 256 bytes
+Total Size   : 128KB
+Planes       : 1
+Lock Regions : 16
+Locked       : none
+Security     : false
+Boot Flash   : false
 https://wiki.newae.com/Manual_SAM3U_Firmware_Update
