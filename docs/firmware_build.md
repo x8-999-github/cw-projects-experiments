@@ -110,9 +110,20 @@ https://www.xilinx.com/support/documentation/sw_manuals/xilinx14_4/PlanAhead_Tut
 # Building the SAM3U firmware
 
 It looks like the tool to use is windows based and called Atmel studio.
-
 There is also a Linux port of the ARM compilers we are going to try and use.
 
-Posted question here:
-https://forum.newae.com/viewtopic.php?f=6&t=386
+Posted question here: https://forum.newae.com/viewtopic.php?f=6&t=386
+
+It is possible to build the Firmware under linux but this requires a little hacking of Makefiles.
 http://www.microchip.com/development-tools/atmel-studio-7/avr-and-arm-toolchains-(c-compilers)
+
+
+# install gcc-arm-none-eabi
+
+On debian first install the gcc-arm-none-eabi package (it contains support for the M4 series ARM processors)
+
+	sudo apt-get install gcc-arm-none-eabi
+
+And follow 
+
+https://wiki.newae.com/Manual_SAM3U_Firmware_Update
