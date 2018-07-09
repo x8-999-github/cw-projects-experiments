@@ -22,7 +22,7 @@ import logging
 import time
 from chipwhisperer.common.utils import util
 
-from base import ScopeTemplate,Channel
+from chipwhisperer.capture.scopes.base import ScopeTemplate,Channel
 from chipwhisperer.common.utils.pluginmanager import Plugin
 from chipwhisperer.common.utils.parameter import Parameter, setupSetParam
 import numpy
@@ -144,10 +144,10 @@ class DS1000z(ScopeTemplate,Plugin):
 
 
 if __name__ == '__main__':
-    print("DS1000z test code")
+    print("DS1000z Sample test code")
     ds =  DS1000z()
     ds.con()
     ds.arm()
+    time.sleep(4)
     ds.capture()
-
-    
+    print(ds.channels[0].getTrace())
